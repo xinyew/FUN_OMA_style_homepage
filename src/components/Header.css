@@ -10,7 +10,8 @@
     top: 0;
     left: 0;
     width: 100vw;
-    padding: 1.5rem 0;
+    padding: 0.2rem 0;
+    /* Reduced precisely by 20% (1.5rem * 0.8) */
     background: transparent;
     z-index: 1000;
     overflow: hidden;
@@ -41,5 +42,5 @@
 
 .logo-hollow {
     color: transparent;
-    -webkit-text-stroke: 0.01em #ffffff;
+    -webkit-text-stroke: 0.012em #ffffff;
 }

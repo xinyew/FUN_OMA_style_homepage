@@ -43,13 +43,43 @@ export default function Header() {
         return () => window.removeEventListener('resize', adjustFontSize);
     }, []);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            // Find all items we want to translate
+            const items = document.querySelectorAll('.scroll-up-item');
+            if (items.length === 0) return;
+
+            const scrollY = window.scrollY;
+
+            // Calculate the physical height of the text directly from the first element
+            const textHeight = items[0].offsetHeight;
+
+            // Calculate the maximum allowed translation (80% of text height)
+            const maxTranslate = textHeight * 0.85;
+
+            // Cap the translation so they perfectly stick when only 20% is visible
+            const translateY = Math.min(scrollY, maxTranslate);
+
+            items.forEach(item => {
+                // Move them physically upwards, simulating them being attached to the scroll grid
+                item.style.transform = `translateY(-${translateY}px)`;
+            });
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        // Run immediately on load just in case page starts scrolled down
+        handleScroll();
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
         <header className="premium-header">
             <nav className="header-container" ref={containerRef}>
                 <a href="/" className="nav-item logo-hollow">aNERD</a>
-                <a href="#" className="nav-item">WORK</a>
-                <a href="#" className="nav-item">PAPERS</a>
-                <a href="#" className="nav-item">ABOUT</a>
+                <a href="#" className="nav-item scroll-up-item">WORK</a>
+                <a href="#" className="nav-item scroll-up-item">PAPERS</a>
+                <a href="#" className="nav-item scroll-up-item">ABOUT</a>
             </nav>
         </header>
     );

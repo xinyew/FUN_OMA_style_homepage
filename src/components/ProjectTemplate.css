@@ -1,0 +1,29 @@
+.project-template-container {
+    position: absolute;
+    left: 0;
+    width: 100vw;
+}
+
+.project-template-img {
+    width: 100vw;
+    display: block;
+}
+
+.project-template-box {
+    position: absolute;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 3.2vw;
+    /* Increased by 60% from 2.0vw */
+    font-family: 'Inter', sans-serif;
+    z-index: 10;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease;
+}
+
+.project-template-box:hover {
+    transform: scale(1.02);
+}
