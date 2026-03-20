@@ -1,0 +1,49 @@
+@font-face {
+    font-family: 'OMACustom';
+    src: url('/fonts/7b59b849-109a-4261-87a6-dcdb69514c49.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.premium-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    padding: 1.5rem 0;
+    background: rgba(10, 10, 10, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    /* Hides any accidental 1px sub-rounding overflow */
+}
+
+.header-container {
+    display: inline-flex;
+    width: max-content;
+    /* Crushes the container natively down to exactly fit the text + gaps */
+    gap: 1em;
+    /* Symmetrical inner gaps driven completely by font-size scale */
+    padding: 0 1em;
+    /* Symmetrical edge gaps perfectly identical to the inner gap */
+    align-items: center;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.nav-item {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: inherit;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    transition: opacity 0.3s ease;
+    font-family: 'OMACustom', 'Inter', sans-serif;
+}
+
+.nav-item:hover {
+    opacity: 0.7;
+}
