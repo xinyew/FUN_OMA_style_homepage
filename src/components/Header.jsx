@@ -46,7 +46,7 @@ export default function Header() {
     return (
         <header className="premium-header">
             <nav className="header-container" ref={containerRef}>
-                <a href="/" className="nav-item">XYZ</a>
+                <a href="/" className="nav-item logo-hollow">XYZ</a>
                 <a href="#" className="nav-item">PROJECTS</a>
                 <a href="#" className="nav-item">PUBLICATIONS</a>
                 <a href="#" className="nav-item">ABOUT</a>

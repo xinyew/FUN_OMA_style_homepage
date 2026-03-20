@@ -24,9 +24,9 @@
     display: inline-flex;
     width: max-content;
     /* Crushes the container natively down to exactly fit the text + gaps */
-    gap: 1em;
+    gap: 0.5em;
     /* Symmetrical inner gaps driven completely by font-size scale */
-    padding: 0 1em;
+    padding: 0 0.5em;
     /* Symmetrical edge gaps perfectly identical to the inner gap */
     align-items: center;
     line-height: 1;
@@ -40,10 +40,10 @@
     font-weight: normal;
     letter-spacing: -0.02em;
     text-transform: uppercase;
-    transition: opacity 0.3s ease;
     font-family: 'OMACustom', 'Inter', sans-serif;
 }
 
-.nav-item:hover {
-    opacity: 0.7;
+.logo-hollow {
+    color: transparent;
+    -webkit-text-stroke: 0.01em #ffffff;
 }
