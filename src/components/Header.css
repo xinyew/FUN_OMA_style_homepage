@@ -11,11 +11,8 @@
     left: 0;
     width: 100vw;
     padding: 1.5rem 0;
-    background: rgba(10, 10, 10, 0.75);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: transparent;
     z-index: 1000;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     overflow: hidden;
     /* Hides any accidental 1px sub-rounding overflow */
 }
@@ -39,7 +36,6 @@
     font-size: inherit;
     font-weight: normal;
     letter-spacing: -0.02em;
-    text-transform: uppercase;
     font-family: 'OMACustom', 'Inter', sans-serif;
 }
 
