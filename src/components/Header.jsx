@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './Header.css';
 
 export default function Header() {
@@ -43,6 +43,8 @@ export default function Header() {
         return () => window.removeEventListener('resize', adjustFontSize);
     }, []);
 
+    const [logoText, setLogoText] = useState("XINYE");
+
     useEffect(() => {
         const handleScroll = () => {
             // Find all items we want to translate
@@ -76,7 +78,17 @@ export default function Header() {
     return (
         <header className="premium-header">
             <nav className="header-container" ref={containerRef}>
-                <a href="/" className="nav-item logo-hollow">aNERD</a>
+                <a
+                    href="/"
+                    className="nav-item logo-hollow"
+                    style={{ position: 'relative', display: 'inline-block' }}
+                    onMouseEnter={() => setLogoText('aNERD')}
+                    onMouseLeave={() => setLogoText('XINYE')}
+                >
+                    {/* This invisible span permanently forces the bounding box to the width of the larger word, preventing all siblings from shifting laterally */}
+                    <span style={{ visibility: 'hidden' }}>XINYE</span>
+                    <span style={{ position: 'absolute', left: 0, top: 0 }}>{logoText}</span>
+                </a>
                 <a href="#" className="nav-item scroll-up-item">WORK</a>
                 <a href="#" className="nav-item scroll-up-item">PAPERS</a>
                 <a href="#" className="nav-item scroll-up-item">ABOUT</a>
