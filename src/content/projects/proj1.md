@@ -1,7 +1,9 @@
 ---
-title: "Architecture Against Architecture"
+title: "AN IMPLANTED POTENTIOSTAT"
 date: "2026-12-07"
 type: "project"
-image: "/@fs/Users/xinye/Downloads/www.oma.com/cdn.sanity.io/images/5azy6oei/production/d149ee82e40ba4de90dfba1c0199549401909239-5000x2844.jpg"
+image: "/images/sensorZoomed.png"
+titleTop: "27"
+titleLeft: "23"
 ---
 Architecture against architecture exposes the brutalist structure of existence.

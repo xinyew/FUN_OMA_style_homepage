@@ -1,9 +1,9 @@
 import './ProjectTemplate.css';
 
 export default function ProjectTemplate({ data, top, index }) {
-    // Deterministically random box placement based on array index
-    const boxTop = 15 + (index % 3) * 12; // Range 15vw to 39vw
-    const boxLeft = 5 + (index % 4) * 15; // Range 5vw to 50vw
+    // Use explicit markdown coordinates if provided, otherwise fallback to deterministic random placement
+    const boxTop = data.titleTop !== undefined ? Number(data.titleTop) : 15 + (index % 3) * 12; 
+    const boxLeft = data.titleLeft !== undefined ? Number(data.titleLeft) : 5 + (index % 4) * 15; 
 
     return (
         <div className="project-template-container" style={{ top: `${top}vw` }}>
