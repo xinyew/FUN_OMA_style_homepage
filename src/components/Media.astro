@@ -1,0 +1,38 @@
+---
+/* An image from a project folder in a ratio box, with its blurred placeholder
+   behind it and, for generated figures, a visible ILLUSTRATION tag. */
+import { Image } from 'astro:assets';
+import { projectImage } from '../lib/site.js';
+
+interface Props {
+  slug: string;
+  file: string;
+  alt: string;
+  illustration?: boolean;
+  widths?: number[];
+  sizes?: string;
+  eager?: boolean;
+  ratio?: string;          // crop to this ratio instead of the image's own
+  class?: string;
+}
+const {
+  slug, file, alt, illustration = false,
+  widths = [640, 960, 1280, 1920, 2560], sizes = '100vw',
+  eager = false, ratio, class: className
+} = Astro.props;
+
+const img = projectImage(slug, file);
+const usable = [...new Set([...widths.filter((w) => w < img.meta.width), Math.min(img.meta.width, Math.max(...widths))])];
+---
+<span class:list={['si-media', className]} style={`--si-ratio: ${ratio ?? img.ratio}; background-image: url("${img.lqip}")`}>
+  <Image
+    src={img.meta}
+    alt={alt}
+    widths={usable}
+    sizes={sizes}
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : 'auto'}
+    decoding="async"
+  />
+  {illustration && <span class="site-tag" aria-hidden="true">Illustration</span>}
+</span>

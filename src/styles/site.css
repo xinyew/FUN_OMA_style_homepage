@@ -1,0 +1,101 @@
+/* Site layer on top of the Supergraphic Index template (tokens.css, bundle.css). */
+
+/* ---------- theme: follow the system ---------- */
+/* tokens.css defines [data-theme="dark"]; this applies the same values when the
+   system is dark and no theme is forced. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #000000;
+    --ink: #ffffff;
+    --document: #5aa2ff;
+  }
+}
+html { background: var(--paper); }
+body { margin: 0; }
+img { max-width: 100%; }
+
+/* ---------- skip link ---------- */
+.site-skip { position: absolute; left: var(--space-4); top: -100px; z-index: calc(var(--z-nav) + 1); padding: var(--space-2) var(--space-3); background: var(--ink); color: var(--paper); font: 700 16px/1 var(--font-sans); text-decoration: none; }
+.site-skip:focus { top: var(--space-4); }
+
+/* ---------- nav: the home word swaps to its hover word ---------- */
+/* The hover word sits over the home word without taking space, so the row never
+   moves; the nav's fill (0.89) leaves room for it before the next word. */
+.site-swap { position: relative; display: inline-block; }
+.site-swap__b { position: absolute; left: 0; top: 0; visibility: hidden; text-transform: none; }
+.si-nav__word:hover .site-swap__a,
+.si-nav__word:focus-visible .site-swap__a { visibility: hidden; }
+.si-nav__word:hover .site-swap__b,
+.si-nav__word:focus-visible .site-swap__b { visibility: visible; }
+
+/* ---------- generated figures carry a visible tag ---------- */
+.site-tag {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  z-index: 1;
+  padding: 3px 6px 2px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 700 12px/15px var(--font-sans);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.site-hero .site-tag { top: auto; bottom: var(--space-4); right: var(--si-margin); }
+
+/* ---------- media inside fixed-ratio frames fills the frame ---------- */
+.si-media > img { transition: opacity .3s linear; }
+.si-gallery__item > .si-media { width: 100%; height: 100%; }
+.si-gallery__item--full { aspect-ratio: var(--si-ratio, var(--ratio-plate, 4 / 3)); }
+.si-gallery__item--wide > .si-media { aspect-ratio: auto; }
+
+/* ---------- home ---------- */
+.site-plate { display: block; }
+.site-plate .si-media { width: 100%; max-height: 100svh; }
+.site-collage .si-signal { overflow-wrap: break-word; }
+@media (max-width: 767px) {
+  .site-collage > .site-plate:not(:first-child) { margin-top: var(--space-6); }
+}
+
+/* ---------- project page ---------- */
+.site-hero .si-media { width: 100%; max-height: 100svh; }
+.site-prose > :first-child { margin-top: 0; }
+.site-prose > :last-child { margin-bottom: 0; }
+.site-prose p { margin: 0 0 1em; }
+.site-prose a { color: inherit; text-decoration: underline; text-underline-offset: .15em; }
+.site-section { margin-top: var(--space-12); }
+.si-gallery + .si-gallery { margin-top: var(--space-4); }
+
+/* ---------- index pages ---------- */
+.site-controls { max-width: var(--container); margin-inline: auto; box-sizing: content-box; }
+html:not(.si-js) .site-controls { display: none; }
+.site-empty { max-width: var(--container); margin: var(--space-8) auto; }
+.site-paper__links { display: flex; gap: var(--space-4); margin-top: var(--space-2); }
+.site-paper__links:empty { display: none; }
+
+/* ---------- about ---------- */
+.site-about__lead { max-width: 21em; margin: 0 0 var(--space-12); text-wrap: pretty; }
+.site-about__section { max-width: var(--measure); margin: 0 auto var(--space-10); }
+.site-about__heading { margin: 0 0 var(--space-2); text-transform: uppercase; }
+.site-about__section .si-meta { margin: 0; }
+.site-about__section .si-meta__row { grid-template-columns: 22% minmax(0, 1fr); }
+.site-about__links { margin: 0; padding: 0; list-style: none; }
+.site-about__links li + li { margin-top: var(--space-2); }
+
+/* ---------- footer ---------- */
+.site-footer { margin-top: var(--space-12); padding-block: var(--space-8) var(--space-10); border-top: var(--border-hairline) solid var(--rule); }
+.si-related + .site-footer { margin-top: 0; border-top: 0; }
+.site-footer p { margin: 0; }
+.site-footer__inner { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--gutter); justify-content: space-between; }
+.site-footer--about .site-footer__inner { gap: var(--space-4) var(--gutter); justify-content: flex-start; }
+.site-footer__title { flex: 1 1 280px; margin: 0; }
+.site-footer__text { flex: 999 1 560px; min-width: 0; max-width: var(--measure); display: flex; flex-direction: column; gap: var(--space-4); }
+
+/* ---------- 404 ---------- */
+.site-notfound { min-height: 40vh; }
+.site-notfound h1 { margin: 0 0 var(--space-4); }
+
+@media (prefers-reduced-motion: reduce) {
+  .si-media > img { transition: none; }
+}

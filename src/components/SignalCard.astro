@@ -1,0 +1,19 @@
+---
+/* A dated item in signal red. Links to its outside URL, else to its project. */
+import { formatDate, isoDate, projectUrl } from '../lib/site.js';
+
+interface Props {
+  item: { data: { title: string; date: Date; precision: 'day' | 'month' | 'year'; dateLabel?: string; project?: string; source?: string; url?: string } };
+  variant?: 'framed' | 'halftone' | 'plain';
+  [attr: string]: unknown;
+}
+const { item, variant = 'framed', ...attrs } = Astro.props;
+const d = item.data;
+const href = d.url ?? (d.project ? projectUrl(d.project) : undefined);
+const Tag = href ? 'a' : 'div';
+---
+<Tag class:list={['si-signal', { [`si-signal--${variant}`]: variant !== 'plain' }]} href={href} {...attrs}>
+  <time class="si-signal__date t-date" datetime={isoDate(d.date, d.precision)}>{formatDate(d.date, d.precision, d.dateLabel)}</time>
+  <span class="si-signal__headline t-display">{d.title}</span>
+  {d.source && <span class="si-signal__source t-label">{d.source}</span>}
+</Tag>

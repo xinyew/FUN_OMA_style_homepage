@@ -1,0 +1,34 @@
+[
+  {
+    "id": "ubistat",
+    "title": "UbiStat: [full title]",
+    "authors": "Xinye [surname], [co-authors]",
+    "year": 2026,
+    "status": "In preparation",
+    "project": "ubistat"
+  },
+  {
+    "id": "frequency-robots",
+    "title": "Frequency-encoded control for modular, untethered robots",
+    "authors": "[first author], Xinye [surname], [co-authors]",
+    "year": 2026,
+    "status": "In preparation",
+    "project": "frequency-robots"
+  },
+  {
+    "id": "biohybrid",
+    "title": "[Title of the battery-free biohybrid actuation paper]",
+    "authors": "[authors]",
+    "year": 2026,
+    "status": "In preparation",
+    "project": "biohybrid"
+  },
+  {
+    "id": "care-ecologies",
+    "title": "[Title of the DICE care-ecology paper]",
+    "authors": "[authors]",
+    "year": 2026,
+    "status": "In revision",
+    "project": "care-ecologies"
+  }
+]

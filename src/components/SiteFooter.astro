@@ -1,0 +1,37 @@
+---
+/* The page end. On home it carries the short bio; elsewhere a single line.
+   The CV link appears once public/cv.pdf exists; the email once site.email is set. */
+import { existsSync } from 'node:fs';
+import { site } from '../site.config.mjs';
+import { url } from '../lib/site.js';
+
+interface Props { about?: boolean }
+const { about = false } = Astro.props;
+const hasCv = existsSync('public/cv.pdf');
+const links = [
+  hasCv && { href: url('cv.pdf'), label: 'Curriculum vitae (PDF)', cls: 'si-link si-link--document' },
+  about && { href: url('work/'), label: 'All projects', cls: 'si-link' },
+  site.github && { href: `https://github.com/${site.github}`, label: 'GitHub', cls: 'si-link' },
+  site.email && { href: `mailto:${site.email}`, label: site.email, cls: 'si-link' }
+].filter(Boolean) as { href: string; label: string; cls: string }[];
+---
+<footer class:list={['site-footer si-wrap', { 'site-footer--about': about }]}>
+  {about ? (
+    <div class="site-footer__inner">
+      <h2 class="site-footer__title t-display">About</h2>
+      <div class="site-footer__text">
+        <p class="t-body">{site.bio}</p>
+        <p class="t-body site-footer__links">
+          {links.map((l, i) => (<>{i > 0 && ' · '}<a class={l.cls} href={l.href}>{l.label}</a></>))}
+        </p>
+      </div>
+    </div>
+  ) : (
+    <div class="site-footer__inner">
+      <p class="t-meta site-footer__line">{site.name} · {site.role}</p>
+      <p class="t-meta site-footer__links">
+        {links.map((l, i) => (<>{i > 0 && ' · '}<a class={l.cls} href={l.href}>{l.label}</a></>))}
+      </p>
+    </div>
+  )}
+</footer>

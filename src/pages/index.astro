@@ -1,0 +1,59 @@
+---
+/* Home: the generative collage. Each featured project is a full-width plate with
+   its label dropped onto it; news about a project hangs off that plate's lower
+   edge; other news floats between plates. bundle.js places everything from the
+   seed in site.config, so the layout is the same on every visit until the seed
+   or the content changes. Under 768px the same markup reads as a stacked list. */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Media from '../components/Media.astro';
+import SignalCard from '../components/SignalCard.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { site } from '../site.config.mjs';
+import { projectUrl, projectImage, byOrder, byDateDesc } from '../lib/site.js';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft && data.featured)).sort(byOrder);
+const news = (await getCollection('news', ({ data }) => !data.draft)).sort(byDateDesc);
+const slugs = new Set(projects.map((p) => p.id));
+const hosted = (slug: string) => news.filter((n) => n.data.project === slug);
+const floating = news.filter((n) => !n.data.project || !slugs.has(n.data.project));
+
+/* Floating news goes in after the second plate, the third, and so on. */
+const blocks = projects.map((project, i) => ({ project, i, cards: hosted(project.id), floater: i >= 1 ? floating[i - 1] : undefined }));
+const leftover = floating.slice(Math.max(0, projects.length - 1));
+---
+<BaseLayout current="home">
+  <main id="main">
+    <h1 class="si-sr">{site.name}: research projects</h1>
+    <div class="si-collage site-collage" data-seed={site.seed}>
+      {blocks.map(({ project, i, cards, floater }) => {
+        const d = project.data;
+        const ground = projectImage(project.id, d.cover).ground;
+        return (
+          <>
+            <a class="si-plate site-plate" data-kind="plate" data-key={`plate-${project.id}`} data-si-ground={ground} href={projectUrl(project.id)} tabindex="-1" aria-hidden="true">
+              <Media slug={project.id} file={d.cover} alt="" illustration={d.coverIllustration} ratio="16 / 9" eager={i === 0} />
+            </a>
+            <a
+              class="si-collage__label"
+              data-kind="label"
+              data-key={`label-${project.id}`}
+              data-host={`plate-${project.id}`}
+              data-x={d.labelLeft}
+              data-y={d.labelTop}
+              href={projectUrl(project.id)}
+            >{d.label}</a>
+            {cards.map((n) => (
+              <SignalCard item={n} variant="framed" data-kind="card" data-key={`news-${n.id}`} data-host={`plate-${project.id}`} />
+            ))}
+            {floater && <SignalCard item={floater} variant="halftone" data-kind="card" data-key={`news-${floater.id}`} />}
+          </>
+        );
+      })}
+      {leftover.map((n) => (
+        <SignalCard item={n} variant="halftone" data-kind="card" data-key={`news-${n.id}`} />
+      ))}
+    </div>
+    <SiteFooter about />
+  </main>
+</BaseLayout>

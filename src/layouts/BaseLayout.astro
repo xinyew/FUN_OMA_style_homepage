@@ -1,0 +1,57 @@
+---
+import '@fontsource/arimo/400.css';
+import '@fontsource/arimo/700.css';
+import '../design-system/tokens.css';
+import '../design-system/bundle.css';
+import '../styles/site.css';
+import Nav from '../components/Nav.astro';
+import { site } from '../site.config.mjs';
+import { url } from '../lib/site.js';
+
+interface Props {
+  title?: string;
+  description?: string;
+  current?: string;
+  ogImage?: string;
+}
+const { title, description = site.description, current = '', ogImage } = Astro.props;
+const pageTitle = title ? `${title} · ${site.name}` : `${site.name} · Research`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <script is:inline>
+      /* si-js hides the home collage until it is laid out; drop it if the script never arrives */
+      document.documentElement.classList.add('si-js');
+      setTimeout(function () { if (!window.SupergraphicIndex) document.documentElement.classList.remove('si-js'); }, 4000);
+    </script>
+  </head>
+  <body class="si-page">
+    <a class="site-skip" href="#main">Skip to content</a>
+    <Nav current={current} />
+    <slot />
+    <script>
+      import '../design-system/bundle.js';
+      try {
+        (window as any).SupergraphicIndex.init();
+      } catch (error) {
+        document.documentElement.classList.remove('si-js');
+        console.error(error);
+      }
+    </script>
+  </body>
+</html>

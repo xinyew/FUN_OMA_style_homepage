@@ -1,0 +1,56 @@
+---
+/* The work index: search, topic filter and list/grid view, all kept in the URL
+   (?q=…&topic=…&view=grid) so a filtered view can be linked. Rows are grouped
+   by status. Without scripts the controls hide and every project shows. */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import IndexRow from '../../components/IndexRow.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { byOrder, slugify, url } from '../../lib/site.js';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(byOrder);
+const topics = [...new Set(projects.flatMap((p) => p.data.topics))].sort((a, b) => a.localeCompare(b));
+const groups = ['Ongoing', 'Completed']
+  .map((status) => ({ status, list: projects.filter((p) => p.data.status === status) }))
+  .filter((g) => g.list.length > 0);
+---
+<BaseLayout title="Work" current="work" description="Research projects by Xinye: sensing hardware, haptics, robotics and care.">
+  <main id="main" class="si-below-nav">
+    <h1 class="si-sr">Work</h1>
+    <div class="si-wrap site-controls">
+      <form class="si-search si-search--page" role="search">
+        <label class="si-sr" for="work-search">Search projects</label>
+        <input class="si-search__input" id="work-search" type="search" name="q" placeholder="Search projects" autocomplete="off" data-si-param="q" />
+      </form>
+      <div class="si-filter t-label">
+        <p class="si-filter__title" id="topic-label">Topic</p>
+        <ul class="si-filter__list" aria-labelledby="topic-label">
+          {topics.map((t) => (
+            <li><button class="si-toggle" type="button" data-si-param="topic" data-si-value={slugify(t)} aria-pressed="false">{t}</button></li>
+          ))}
+        </ul>
+      </div>
+      <div class="si-view t-meta">
+        <span id="view-label">View as</span>
+        <button class="si-view__button" type="button" data-si-param="view" data-si-value="list" data-si-default aria-pressed="true" aria-describedby="view-label">List</button>
+        <button class="si-view__button" type="button" data-si-param="view" data-si-value="grid" aria-pressed="false" aria-describedby="view-label">Grid</button>
+      </div>
+    </div>
+    <div class="site-index" data-si-view-target>
+      {groups.map((g) => (
+        <section class="si-index" aria-labelledby={`group-${slugify(g.status)}`} data-si-filter-group>
+          <div class="si-index__group">
+            <h2 class="si-index__label t-date" id={`group-${slugify(g.status)}`}>{g.status}</h2>
+            <ul class="si-index__rows">
+              {g.list.map((p) => <IndexRow project={p} />)}
+            </ul>
+          </div>
+        </section>
+      ))}
+      <div class="si-wrap" data-si-empty hidden>
+        <p class="site-empty t-body">No project matches. <a class="si-link" href={url('work/')}>Show all projects</a></p>
+      </div>
+    </div>
+    <SiteFooter />
+  </main>
+</BaseLayout>

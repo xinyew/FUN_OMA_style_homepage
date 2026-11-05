@@ -1,0 +1,45 @@
+---
+/* Papers from src/content/papers.json. Work that is not out yet is grouped by
+   stage; published papers by year, newest first. */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { projectUrl, slugify, url } from '../../lib/site.js';
+
+const papers = await getCollection('papers');
+const projects = new Set((await getCollection('projects', ({ data }) => !data.draft)).map((p) => p.id));
+const stages = ['Under review', 'In revision', 'In preparation'];
+const published = papers.filter((p) => p.data.status === 'Published');
+const groups = [
+  ...stages.map((stage) => ({ label: stage, list: papers.filter((p) => p.data.status === stage) })),
+  ...[...new Set(published.map((p) => p.data.year))].sort((a, b) => b - a)
+    .map((year) => ({ label: String(year), list: published.filter((p) => p.data.year === year) }))
+].filter((g) => g.list.length > 0);
+---
+<BaseLayout title="Papers" current="papers" description="Papers by Xinye, published and in progress.">
+  <main id="main" class="si-below-nav">
+    <h1 class="si-sr">Papers</h1>
+    {groups.map((g) => (
+      <section class="si-index" aria-labelledby={`papers-${slugify(g.label)}`}>
+        <div class="si-index__group">
+          <h2 class="si-index__label t-date" id={`papers-${slugify(g.label)}`}>{g.label}</h2>
+          <ul class="si-index__rows">
+            {g.list.map((p) => (
+              <li class="si-paper">
+                <h3 class="si-paper__title t-display">{p.data.url ? <a href={p.data.url}>{p.data.title}</a> : p.data.title}</h3>
+                <p class="si-paper__meta t-meta">
+                  {p.data.authors}{p.data.venue && <> · <i>{p.data.venue}</i></>}{p.data.status === 'Published' && <> · {p.data.year}</>}
+                </p>
+                <p class="si-paper__meta site-paper__links t-meta">
+                  {p.data.pdf && <a class="si-link si-link--document" href={url(`papers/${p.data.pdf}`)}>PDF</a>}
+                  {p.data.project && projects.has(p.data.project) && <a class="si-link si-link--arrow" href={projectUrl(p.data.project)}>Project</a>}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))}
+    <SiteFooter />
+  </main>
+</BaseLayout>

@@ -1,0 +1,65 @@
+/* Supergraphic Index — generated from tokens.json */
+:root, [data-theme="light"] {
+  --paper: #ffffff;
+  --ink: #000000;
+  --signal: #ff0000;
+  --halo: var(--paper);
+  --document: #0066e0;
+  --inverse: var(--ink);
+  --on-inverse: var(--paper);
+  --rule: var(--ink);
+  --dot: var(--ink);
+  --on-dark-image: #ffffff;
+  --on-light-image: #000000;
+}
+[data-theme="dark"] {
+  --paper: #000000;
+  --ink: #ffffff;
+  --signal: #ff0000;
+  --halo: var(--paper);
+  --document: #5aa2ff;
+  --inverse: var(--ink);
+  --on-inverse: var(--paper);
+  --rule: var(--ink);
+  --dot: var(--ink);
+  --on-dark-image: #ffffff;
+  --on-light-image: #000000;
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 32px;
+  --space-8: 48px;
+  --space-10: 64px;
+  --space-12: 80px;
+  --gutter: 2.35765%;
+  --container: 950px;
+  --measure: 788px;
+  --radius-0: 0;
+  --border-hairline: 1px;
+  --border-control: 2px;
+  --border-view: 3px;
+  --border-active: 4px;
+  --border-search: 5px;
+  --tracking-display: -0.04em;
+  --tracking-search: -0.03em;
+  --image-index: grayscale(1);
+  --image-feature: none;
+  --ratio-index: 16 / 9;
+  --ratio-plate: 4 / 3;
+  --z-nav: 6000;
+  --font-sans: Arimo, Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+.t-supergraphic { font-family: var(--font-sans); font-size: 94px; line-height: 0.7; font-weight: 700; letter-spacing: -0.04em; }
+.t-headline { font-family: var(--font-sans); font-size: 50px; line-height: 1; font-weight: 700; letter-spacing: -0.04em; }
+.t-display { font-family: var(--font-sans); font-size: 38px; line-height: 38px; font-weight: 700; letter-spacing: -0.04em; }
+.t-section { font-family: var(--font-sans); font-size: 33px; line-height: 1; font-weight: 400; }
+.t-body { font-family: var(--font-sans); font-size: 19px; line-height: 25px; font-weight: 400; }
+.t-label { font-family: var(--font-sans); font-size: 19px; line-height: 25px; font-weight: 400; }
+.t-date { font-family: var(--font-sans); font-size: 19px; line-height: 25px; font-weight: 700; letter-spacing: -0.04em; }
+.t-meta { font-family: var(--font-sans); font-size: 16px; line-height: 19.2px; font-weight: 400; }
+.t-caption { font-family: var(--font-sans); font-size: 15px; line-height: 20px; font-weight: 400; }
+.t-caption-strong { font-family: var(--font-sans); font-size: 15px; line-height: 20px; font-weight: 700; }
+.t-micro { font-family: var(--font-sans); font-size: 12px; line-height: 15px; font-weight: 400; }

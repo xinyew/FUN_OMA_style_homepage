@@ -1,0 +1,28 @@
+---
+/* The inverted band at the end of a project page: other work, one row per topic.
+   data-si-ground="background" turns the nav ink as the band passes under it. */
+import Media from './Media.astro';
+import { projectUrl, slugify } from '../lib/site.js';
+
+interface Props { sets: { label: string; list: { id: string; data: { title: string; cover: string } }[] }[] }
+const { sets } = Astro.props;
+---
+{sets.length > 0 && (
+  <footer class="si-related" aria-label="Related work" data-si-ground="background">
+    {sets.map((set) => (
+      <section class="si-related__set" aria-labelledby={`related-${slugify(set.label)}`}>
+        <h2 class="si-related__label t-caption-strong" id={`related-${slugify(set.label)}`}>{set.label}</h2>
+        <ul class="si-related__list">
+          {set.list.map((p) => (
+            <li>
+              <a class="si-related__link" href={projectUrl(p.id)}>
+                <Media class="si-related__media" slug={p.id} file={p.data.cover} alt="" ratio="4 / 3" widths={[480, 960]} sizes="(min-width: 768px) 230px, 50vw" />
+                <span class="si-related__caption t-caption">{p.data.title}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </footer>
+)}

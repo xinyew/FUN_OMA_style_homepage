@@ -1,0 +1,36 @@
+---
+/* The supergraphic row. The first word is home: hollow, never tucks, and swaps
+   to its hover word without moving its neighbors. data-si-fill leaves enough
+   gap after it for the wider hover word. si-nav--tuck-current lets the current
+   section's word tuck too, so only the hollow home word stays over the text. */
+import { site } from '../site.config.mjs';
+import { url } from '../lib/site.js';
+
+interface Props { current?: string }
+const { current = '' } = Astro.props;
+---
+<nav class="si-nav si-nav--tuck-current" aria-label="Main" data-si-fill="0.89">
+  <ul class="si-nav__row">
+    {site.nav.map((item, i) => {
+      const isHome = i === 0;
+      const isCurrent = item.key === current;
+      return (
+        <li class:list={['si-nav__item', { 'is-home': isHome, 'is-current': isCurrent }]}>
+          <a
+            class:list={['si-nav__word', { 'si-nav__word--outline si-nav__word--keep-outline': isHome }]}
+            href={url(item.href)}
+            aria-current={isCurrent ? 'page' : undefined}
+            aria-label={isHome ? `${item.label}, home` : undefined}
+          >
+            {item.hover ? (
+              <span class="site-swap">
+                <span class="site-swap__a">{item.label}</span>
+                <span class="site-swap__b" aria-hidden="true">{item.hover}</span>
+              </span>
+            ) : item.label}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>

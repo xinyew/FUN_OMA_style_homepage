@@ -1,0 +1,63 @@
+---
+import { existsSync } from 'node:fs';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { site } from '../../site.config.mjs';
+import { url } from '../../lib/site.js';
+
+const hasCv = existsSync('public/cv.pdf');
+
+/* Most recent first. Labels are set in capitals, so keep them short. */
+const background = [
+  { label: 'Georgia Tech', text: 'PhD in Computer Science, School of Interactive Computing, since May 2024. Advised by Josiah Hester and Alexander T. Adams.' },
+  { label: 'CMU', text: 'Master’s in Engineering and Technology Innovation Management (ETIM).' },
+  { label: 'CMU', text: 'Master’s in Urban Design, with computer science coursework alongside.' },
+  { label: 'Hunan University', text: 'Bachelor’s in Architecture, five-year program.' }
+];
+const teaching = [
+  { label: 'Georgia Tech', text: 'Teaching assistant, CS 7641 Machine Learning, since Summer 2026.' }
+];
+---
+<BaseLayout title="About" current="about" description={site.description}>
+  <main id="main" class="si-below-nav">
+    <div class="si-wrap">
+      <h1 class="si-sr">About</h1>
+      <p class="site-about__lead t-headline">{site.bio}</p>
+
+      <section class="site-about__section" aria-labelledby="about-background">
+        <h2 class="site-about__heading t-label" id="about-background">Background</h2>
+        <dl class="si-meta">
+          {background.map((row) => (
+            <div class="si-meta__row">
+              <dt class="si-meta__label t-meta">{row.label}</dt>
+              <dd class="si-meta__value t-meta">{row.text}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section class="site-about__section" aria-labelledby="about-teaching">
+        <h2 class="site-about__heading t-label" id="about-teaching">Teaching</h2>
+        <dl class="si-meta">
+          {teaching.map((row) => (
+            <div class="si-meta__row">
+              <dt class="si-meta__label t-meta">{row.label}</dt>
+              <dd class="si-meta__value t-meta">{row.text}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section class="site-about__section" aria-labelledby="about-elsewhere">
+        <h2 class="site-about__heading t-label" id="about-elsewhere">Elsewhere</h2>
+        <ul class="site-about__links t-body">
+          {hasCv && <li><a class="si-link si-link--document" href={url('cv.pdf')}>Curriculum vitae (PDF)</a></li>}
+          {site.github && <li><a class="si-link si-link--arrow" href={`https://github.com/${site.github}`}>GitHub</a></li>}
+          <li><a class="si-link si-link--arrow" href="https://ic.gatech.edu">School of Interactive Computing</a></li>
+          {site.email && <li><a class="si-link" href={`mailto:${site.email}`}>{site.email}</a></li>}
+        </ul>
+      </section>
+    </div>
+    <SiteFooter />
+  </main>
+</BaseLayout>

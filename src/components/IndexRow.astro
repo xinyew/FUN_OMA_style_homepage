@@ -1,0 +1,28 @@
+---
+/* One project in the work index: grayscale thumbnail, title. Carries what the
+   topic filter and the search field match against. */
+import Media from './Media.astro';
+import { projectUrl, slugify } from '../lib/site.js';
+
+interface Props { project: { id: string; data: { title: string; summary: string; topics: string[]; cover: string; coverAlt: string; coverIllustration: boolean } } }
+const { project } = Astro.props;
+const d = project.data;
+---
+<li
+  data-si-filterable
+  data-si-filter-topic={d.topics.map(slugify).join(' ')}
+  data-si-text={[d.title, d.summary, ...d.topics].join(' ')}
+>
+  <a class="si-row" href={projectUrl(project.id)}>
+    <Media
+      class="si-row__media"
+      slug={project.id}
+      file={d.cover}
+      alt=""
+      ratio="16 / 9"
+      widths={[480, 960]}
+      sizes="(min-width: 768px) 364px, 100vw"
+    />
+    <span class="si-row__title t-display">{d.title}</span>
+  </a>
+</li>

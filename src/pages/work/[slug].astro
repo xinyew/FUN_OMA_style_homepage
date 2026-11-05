@@ -1,0 +1,159 @@
+---
+/* A project page: full-bleed cover under the nav (its measured brightness picks
+   the nav ink), lead text from the markdown body, the metadata table, the
+   gallery, a timeline of the project's history and news, papers, and related
+   work by topic in the inverted footer. */
+import { getCollection, render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Media from '../../components/Media.astro';
+import RelatedFooter from '../../components/RelatedFooter.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { byOrder, byDateDesc, formatDate, isoDate, projectImage, relatedByTopic, slugify, url } from '../../lib/site.js';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => !data.draft);
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const d = project.data;
+const { Content } = await render(project);
+
+const all = (await getCollection('projects', ({ data }) => !data.draft)).sort(byOrder);
+const news = await getCollection('news', ({ data }) => !data.draft && data.project === project.id);
+const papers = await getCollection('papers', ({ data }) => data.project === project.id);
+
+const entries = [
+  ...d.timeline.map((t) => ({ date: t.date, precision: t.precision, dateLabel: t.dateLabel, text: t.text, href: undefined as string | undefined })),
+  ...news.map((n) => ({ date: n.data.date, precision: n.data.precision, dateLabel: n.data.dateLabel, text: n.data.title, href: n.data.url }))
+].sort(byDateDesc);
+const years = [...new Set(entries.map((e) => e.date.getUTCFullYear()))].map((year) => ({
+  year,
+  items: entries.filter((e) => e.date.getUTCFullYear() === year)
+}));
+
+const cover = projectImage(project.id, d.cover);
+const og = await getImage({ src: cover.meta, width: 1200, format: 'jpg' });
+const ogImage = new URL(og.src, Astro.site).href;
+
+const meta = [
+  { label: 'Status', value: [d.status, d.statusNote].filter(Boolean).join(' · ') },
+  d.started && { label: 'Started', value: String(d.started) },
+  d.role && { label: 'Role', value: d.role },
+  d.hardware && { label: 'Hardware', value: d.hardware },
+  d.partners?.length && { label: 'Partners', value: d.partners.join(' · ') },
+  d.funding && { label: 'Funding', value: d.funding },
+  d.paper && { label: 'Paper', value: d.paper }
+].filter(Boolean) as { label: string; value: string }[];
+
+const gallery = d.gallery;
+---
+<BaseLayout title={d.title} description={d.summary} current="work" ogImage={ogImage}>
+  <main id="main">
+    <div class="site-hero" data-si-ground={cover.ground}>
+      <Media slug={project.id} file={d.cover} alt={d.coverAlt} illustration={d.coverIllustration} eager />
+    </div>
+
+    <div class="si-wrap">
+      <header class="si-lead">
+        <h1 class="si-lead__title t-display">{d.title}</h1>
+        <div class="si-lead__body t-body site-prose"><Content /></div>
+      </header>
+
+      <dl class="si-meta">
+        {meta.map((row) => (
+          <div class="si-meta__row">
+            <dt class="si-meta__label t-meta">{row.label}</dt>
+            <dd class="si-meta__value t-meta">{row.value}</dd>
+          </div>
+        ))}
+        <div class="si-meta__row">
+          <dt class="si-meta__label t-meta">Topics</dt>
+          <dd class="si-meta__value t-meta">
+            {d.topics.map((t, i) => (<>{i > 0 && ', '}<a href={url(`work/?topic=${slugify(t)}`)}>{t}</a></>))}
+          </dd>
+        </div>
+        {d.team && (
+          <div class="si-meta__row">
+            <dt class="si-meta__label t-meta">Team</dt>
+            <dd class="si-meta__value t-meta">
+              {d.teamMore?.length ? (
+                <details class="si-meta__more">
+                  <summary>{d.team}</summary>
+                  <ul>{d.teamMore.map((line) => <li>{line}</li>)}</ul>
+                </details>
+              ) : d.team}
+            </dd>
+          </div>
+        )}
+      </dl>
+    </div>
+
+    {gallery.length > 0 && (
+      <div class="si-wrap site-section">
+        <div class="si-gallery">
+          {gallery.map((g) => {
+            const info = projectImage(project.id, g.src);
+            return (
+              <figure class:list={['si-gallery__item', { 'si-gallery__item--full': g.size === 'full', 'si-gallery__item--wide': g.size === 'wide' }]} style={g.size === 'full' ? `--si-ratio: ${info.ratio}` : undefined}>
+                <Media
+                  slug={project.id}
+                  file={g.src}
+                  alt={g.alt}
+                  illustration={g.illustration}
+                  ratio={g.size === 'full' ? undefined : '4 / 3'}
+                  widths={g.size === 'third' ? [480, 960] : [640, 960, 1280, 1920]}
+                  sizes={g.size === 'full' ? '(min-width: 1046px) 950px, 100vw' : g.size === 'wide' ? '(min-width: 1046px) 630px, 100vw' : '(min-width: 1046px) 310px, 100vw'}
+                />
+              </figure>
+            );
+          })}
+        </div>
+      </div>
+    )}
+
+    {papers.length > 0 && (
+      <section class="si-index site-section" aria-labelledby="project-papers">
+        <div class="si-index__group">
+          <h2 class="si-index__label t-date" id="project-papers">Papers</h2>
+          <ul class="si-index__rows">
+            {papers.map((p) => (
+              <li class="si-paper">
+                <h3 class="si-paper__title t-display">{p.data.url ? <a href={p.data.url}>{p.data.title}</a> : p.data.title}</h3>
+                <p class="si-paper__meta t-meta">{p.data.authors}</p>
+                <span class="si-paper__status t-label">{p.data.venue ? `${p.data.venue}, ${p.data.year}` : p.data.status}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    {years.length > 0 && (
+      <section class="si-timeline site-section" aria-label="Timeline">
+        {years.map(({ year, items }) => (
+          <div class="si-timeline__year">
+            <h2 class="si-timeline__label t-display">{year}</h2>
+            <ul class="si-timeline__items">
+              {items.map((e) => {
+                const Tag = e.href ? 'a' : 'div';
+                return (
+                  <li>
+                    <Tag class="si-signal" href={e.href}>
+                      <time class="si-signal__date t-date" datetime={isoDate(e.date, e.precision)}>{formatDate(e.date, e.precision, e.dateLabel)}</time>
+                      <span class="si-signal__headline t-display">{e.text}</span>
+                    </Tag>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </section>
+    )}
+
+    <RelatedFooter sets={relatedByTopic(project, all)} />
+    <SiteFooter />
+  </main>
+</BaseLayout>

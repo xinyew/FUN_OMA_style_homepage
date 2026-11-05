@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../lib/site.js';
+---
+<BaseLayout title="Not found">
+  <main id="main" class="si-below-nav">
+    <div class="si-wrap site-notfound">
+      <h1 class="t-headline">Nothing here.</h1>
+      <p class="t-body">The page may have moved. <a class="si-link" href={url('work/')}>See all projects</a> or <a class="si-link" href={url()}>go home</a>.</p>
+    </div>
+  </main>
+</BaseLayout>
