@@ -42,6 +42,7 @@ const meta = [
   d.started && { label: 'Started', value: String(d.started) },
   d.role && { label: 'Role', value: d.role },
   d.hardware && { label: 'Hardware', value: d.hardware },
+  ...d.specs,
   d.partners?.length && { label: 'Partners', value: d.partners.join(' · ') },
   d.funding && { label: 'Funding', value: d.funding },
   d.paper && { label: 'Paper', value: d.paper }

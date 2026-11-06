@@ -72,7 +72,7 @@ The theme follows the system's light or dark setting.
 
 ## Placeholder illustrations
 
-Everything except the UbiStat cover photo is a drawn placeholder from `scripts/make-plates.py`, not data. Those images carry `illustration: true` and show an ILLUSTRATION tag. Replace them with real photos and figures, then remove the flag. Re-running the script rewrites the placeholders in place.
+The UbiStat cover and the CPAP-PI images are real. The rest are drawn placeholders from `scripts/make-plates.py`, not data. Those images carry `illustration: true` and show an ILLUSTRATION tag. Replace them with real photos and figures, then remove the flag. Re-running the script rewrites the placeholders in place.
 
 ## Deploy
 

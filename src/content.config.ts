@@ -21,6 +21,10 @@ const projects = defineCollection({
     topics: z.array(z.string()).min(1),      // drives the filters and the related footer
     role: z.string().optional(),
     hardware: z.string().optional(),
+    specs: z.array(z.object({                // more rows for the metadata table, after Hardware
+      label: z.string(),
+      value: z.string()
+    })).default([]),
     funding: z.string().optional(),
     partners: z.array(z.string()).optional(),
     team: z.string().optional(),             // one line; the rest of the team goes in teamMore

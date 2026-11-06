@@ -24,7 +24,6 @@ TARGETS = {  # plate name -> file inside src/content/projects
     "ubistat-battery": "ubistat/battery.jpg",
     "ubistat-requirements": "ubistat/requirements.jpg",
     "ubistat-water": "ubistat/water.jpg",
-    "cpap-pressure": "cpap-pi/cover.jpg",
     "plp-vibration": "plp-vibration/cover.jpg",
     "robots-frequency": "frequency-robots/cover.jpg",
     "biohybrid": "biohybrid/cover.jpg",
@@ -132,7 +131,7 @@ def plate_ubistat_battery():
     save(fig, "ubistat-battery")
 
 
-# 3. UbiStat — the six requirements as coloured tiles
+# 3. UbiStat — the six requirements as colored tiles
 def plate_ubistat_requirements():
     fig, ax = canvas(INK)
     reqs = [("AFFORDABLE", ROSE), ("SMALL", ORANGE), ("UNTETHERED", OLIVE), ("SEALED", TEAL), ("MULTI-SENSOR", PURPLE), ("REMOTE", NAVY)]
@@ -180,41 +179,7 @@ def plate_ubistat_water():
     save(fig, "ubistat-water")
 
 
-# 5. CPAP-PI — contact-pressure map inside a pediatric nasal-mask outline
-def plate_cpap():
-    fig, ax = canvas(PAPER)
-    t = np.linspace(0, 2 * np.pi, 400)
-    mx = 8.0 + 3.1 * np.sin(t) * (1 - 0.18 * np.cos(t))
-    my = 4.4 + 3.3 * np.cos(t) - 0.55 * np.cos(2 * t)
-    xx, yy = np.meshgrid(np.linspace(4, 12, 400), np.linspace(0.4, 8.6, 400))
-    p = (np.exp(-(((xx - 8.0) / 1.0) ** 2 + ((yy - 7.0) / 0.8) ** 2)) * 1.0 +
-         np.exp(-(((xx - 5.9) / 0.9) ** 2 + ((yy - 3.0) / 1.2) ** 2)) * 0.8 +
-         np.exp(-(((xx - 10.1) / 0.9) ** 2 + ((yy - 3.0) / 1.2) ** 2)) * 0.75 +
-         0.18 * np.sin(xx * 2.1) * np.cos(yy * 1.7))
-    from matplotlib.path import Path
-    inside = Path(np.c_[mx, my]).contains_points(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
-    rim = Path(np.c_[8.0 + 2.2 * np.sin(t), 4.4 + 2.3 * np.cos(t) - 0.4 * np.cos(2 * t)]).contains_points(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
-    band = inside & ~rim
-    pm = np.ma.array(p, mask=~band)
-    from matplotlib.colors import LinearSegmentedColormap
-    cmap = LinearSegmentedColormap.from_list("p", [PAPER, "#f0c9b4", ORANGE, ROSE, NAVY])
-    ax.contourf(xx, yy, pm, levels=14, cmap=cmap, zorder=2)
-    ax.contour(xx, yy, pm, levels=14, colors=INK, linewidths=0.5, alpha=0.35, zorder=3)
-    ax.plot(mx, my, color=INK, lw=2.4, zorder=4)
-    ax.plot(8.0 + 2.2 * np.sin(t), 4.4 + 2.3 * np.cos(t) - 0.4 * np.cos(2 * t), color=INK, lw=1.4, zorder=4)
-    for k in range(16):  # sensor sites around the cushion
-        a = 2 * np.pi * k / 16
-        sx = 8.0 + 2.7 * np.sin(a) * (1 - 0.18 * np.cos(a)); sy = 4.4 + 2.85 * np.cos(a) - 0.5 * np.cos(2 * a)
-        ax.add_patch(patches.Circle((sx, sy), 0.1, fc="#ffffff", ec=INK, lw=1.2, zorder=5))
-    for i in range(60):
-        ax.add_patch(patches.Rectangle((13.3, 1.2 + i * 0.1), 0.35, 0.1, color=cmap(i / 59), lw=0))
-    note(ax, 13.9, 1.2, "LOW", INK, 9); note(ax, 13.9, 7.0, "HIGH", INK, 9)
-    note(ax, 13.3, 7.6, "CONTACT PRESSURE", INK, 9)
-    note(ax, 0.4, 0.4, "SENSING MASK  ·  BLE  ·  TABLET VIEW", INK, 9)
-    save(fig, "cpap-pressure")
-
-
-# 6. Phantom limb pain — five ERM motors on a strap around a transtibial residual limb
+# 5. Phantom limb pain — five ERM motors on a strap around a transtibial residual limb
 def plate_plp():
     fig, ax = canvas(DARK_PLUM)
     cx, cy = 7.2, 4.5
@@ -239,7 +204,7 @@ def plate_plp():
     save(fig, "plp-vibration")
 
 
-# 7. Frequency-encoded control — each module listens to its own band
+# 6. Frequency-encoded control — each module listens to its own band
 def plate_robots():
     fig, ax = canvas(DARK_NAVY)
     cols = [ROSE, ORANGE, OLIVE, TEAL, PURPLE]
@@ -266,7 +231,7 @@ def plate_robots():
     save(fig, "robots-frequency")
 
 
-# 8. Battery-free biohybrid actuation — light in, twitch out
+# 7. Battery-free biohybrid actuation — light in, twitch out
 def plate_biohybrid():
     fig, ax = canvas(PAPER)
     yy = np.linspace(0, 9, 900)
@@ -291,7 +256,7 @@ def plate_biohybrid():
     save(fig, "biohybrid")
 
 
-# 9. Care ecology — an abstract network (no claims about the framework)
+# 8. Care ecology — an abstract network (no claims about the framework)
 def plate_dice():
     fig, ax = canvas(PAPER)
     for r in (1.4, 2.6, 3.8):
@@ -318,5 +283,5 @@ def plate_dice():
 
 if __name__ == "__main__":
     for fn in [plate_ubistat_cv, plate_ubistat_battery, plate_ubistat_requirements, plate_ubistat_water,
-               plate_cpap, plate_plp, plate_robots, plate_biohybrid, plate_dice]:
+               plate_plp, plate_robots, plate_biohybrid, plate_dice]:
         fn()
