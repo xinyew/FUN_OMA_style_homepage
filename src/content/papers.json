@@ -1,8 +1,18 @@
 [
   {
+    "id": "quetzal",
+    "title": "Energy-aware Scheduling and Input Buffer Overflow Prevention for Energy-harvesting Systems",
+    "authors": "Harsh Desai, Xinye Wang, Brandon Lucia",
+    "year": 2025,
+    "status": "Published",
+    "venue": "ASPLOS ’25",
+    "url": "https://doi.org/10.1145/3676641.3715995",
+    "project": "quetzal"
+  },
+  {
     "id": "ubistat",
     "title": "UbiStat: [full title]",
-    "authors": "Xinye [surname], [co-authors]",
+    "authors": "Xinye Wang, [co-authors]",
     "year": 2026,
     "status": "In preparation",
     "project": "ubistat"
@@ -10,7 +20,7 @@
   {
     "id": "frequency-robots",
     "title": "Frequency-encoded control for modular, untethered robots",
-    "authors": "[first author], Xinye [surname], [co-authors]",
+    "authors": "[first author], Xinye Wang, [co-authors]",
     "year": 2026,
     "status": "In preparation",
     "project": "frequency-robots"
