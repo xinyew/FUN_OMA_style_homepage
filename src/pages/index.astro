@@ -28,7 +28,7 @@ const leftover = floating.slice(Math.max(0, projects.length - 1));
     <div class="si-collage site-collage" data-seed={site.seed}>
       {blocks.map(({ project, i, cards, floater }) => {
         const d = project.data;
-        const ground = projectImage(project.id, d.cover).ground;
+        const ground = d.coverGround ?? projectImage(project.id, d.cover).ground;
         return (
           <>
             <a class="si-plate site-plate" data-kind="plate" data-key={`plate-${project.id}`} data-si-ground={ground} href={projectUrl(project.id)} tabindex="-1" aria-hidden="true">

@@ -30,5 +30,13 @@
     "year": 2026,
     "status": "In revision",
     "project": "care-ecologies"
+  },
+  {
+    "id": "safewear",
+    "title": "SafeWear: A Wearable Prototype to Augment Situational Awareness Among Members of Urban Low-SES Communities",
+    "authors": "[authors]",
+    "year": 2026,
+    "status": "In preparation",
+    "project": "safewear"
   }
 ]

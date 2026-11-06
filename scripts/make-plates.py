@@ -20,10 +20,6 @@ from matplotlib.collections import LineCollection
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "content", "projects")
 OUT = sys.argv[1] if len(sys.argv) > 1 else None
 TARGETS = {  # plate name -> file inside src/content/projects
-    "ubistat-cv": "ubistat/cv.jpg",
-    "ubistat-battery": "ubistat/battery.jpg",
-    "ubistat-requirements": "ubistat/requirements.jpg",
-    "ubistat-water": "ubistat/water.jpg",
     "plp-vibration": "plp-vibration/cover.jpg",
     "robots-frequency": "frequency-robots/cover.jpg",
     "biohybrid": "biohybrid/cover.jpg",
@@ -67,119 +63,7 @@ def save(fig, name):
     print(name, os.path.getsize(path) // 1024, "KB")
 
 
-# 1. UbiStat — four cyclic voltammograms, one per working electrode
-def cv_loop(A, Epa, Epc, C):
-    E = np.linspace(-0.4, 0.6, 600)
-    sig = lambda x: 1 / (1 + np.exp(-x))
-    fwd = C + 1.6 * (E + 0.4) + A * np.exp(-((E - Epa) / 0.075) ** 2) + 0.42 * A * sig((E - Epa) / 0.035) * np.exp(-np.clip(E - Epa, 0, None) / 0.55)
-    rev = -C + 1.6 * (E + 0.4) - 0.88 * A * np.exp(-((E - Epc) / 0.085) ** 2) - 0.38 * A * sig((Epc - E) / 0.035) * np.exp(-np.clip(Epc - E, 0, None) / 0.55)
-    return np.concatenate([E, E[::-1]]), np.concatenate([fwd, rev[::-1]])
-
-
-def plate_ubistat_cv():
-    fig, ax = canvas(DARK_NAVY)
-    grid(ax, "#ffffff", step=0.5, lw=0.5, alpha=0.06)
-    grid(ax, "#ffffff", step=2.0, lw=0.8, alpha=0.10)
-    ox, oy, sx, sy = 6.2, 4.4, 8.6, 0.24  # E -> x, I -> y
-    ax.plot([ox - 0.4 * sx - 0.3, ox + 0.6 * sx + 0.3], [oy, oy], color="#ffffff", lw=1.0, alpha=0.35)
-    ax.plot([ox, ox], [0.6, 8.4], color="#ffffff", lw=1.0, alpha=0.35)
-    specs = [(10.5, 0.24, 0.16, 1.8, ROSE), (8.2, 0.12, 0.05, 1.4, ORANGE), (6.4, 0.31, 0.22, 1.1, TEAL), (4.6, 0.05, -0.03, 0.9, PURPLE)]
-    for A, Epa, Epc, C, col in specs:
-        for k in range(5):  # faint earlier scans for depth
-            E, I = cv_loop(A * (0.80 + 0.04 * k), Epa, Epc, C)
-            ax.plot(ox + E * sx, oy + I * sy, color=col, lw=0.8, alpha=0.18, zorder=3)
-        E, I = cv_loop(A, Epa, Epc, C)
-        ax.plot(ox + E * sx, oy + I * sy, color=col, lw=4.2, solid_capstyle="round", zorder=5)
-    for i, (lab, col) in enumerate(zip(["WE1", "WE2", "WE3", "WE4"], [ROSE, ORANGE, TEAL, PURPLE])):
-        y = 8.25 - i * 0.42
-        ax.add_patch(patches.Rectangle((12.9, y - 0.06), 0.42, 0.14, color=col, zorder=6))
-        note(ax, 13.45, y - 0.05, lab, "#ffffff", 10)
-    for e in (-0.4, -0.2, 0.0, 0.2, 0.4, 0.6):
-        x = ox + e * sx
-        ax.plot([x, x], [oy - 0.08, oy + 0.08], color="#ffffff", lw=1, alpha=0.5)
-        note(ax, x, oy - 0.38, f"{e:+.1f}", "#ffffff", 8, ha="center")
-    note(ax, 15.6, oy - 0.75, "E  (V vs Ag/AgCl)", "#ffffff", 9, ha="right")
-    note(ax, ox + 0.15, 8.45, "I  (µA)", "#ffffff", 9)
-    note(ax, 0.35, 0.35, "CYCLIC VOLTAMMETRY  ·  4 ELECTRODES  ·  1 SCAN EACH", "#ffffff", 8)
-    save(fig, "ubistat-cv")
-
-
-# 2. UbiStat — battery life on one coin cell
-def plate_ubistat_battery():
-    fig, ax = canvas(PAPER)
-    x0, x1, y0, y1 = 1.2, 15.0, 1.2, 7.9
-    n = 40 * 24 * 6  # six samples per hour
-    days = np.arange(n) / (24 * 6)
-    v = 3.0 - 0.18 * (days / 40) - 0.62 * (days / 40) ** 6
-    task = (np.arange(n) % 6) == 0  # one task per hour
-    v_load = v - np.where(task, 0.11 + 0.03 * days / 40, 0)
-    X = x0 + (days / 40) * (x1 - x0)
-    Y = lambda vv: y0 + (vv - 1.9) / (3.1 - 1.9) * (y1 - y0)
-    for d in range(0, 41, 5):
-        xx = x0 + d / 40 * (x1 - x0)
-        ax.plot([xx, xx], [y0, y1], color=INK, lw=0.6, alpha=0.12)
-        note(ax, xx, y0 - 0.45, f"{d}", INK, 9, ha="center")
-    for vv in (2.0, 2.5, 3.0):
-        ax.plot([x0, x1], [Y(vv), Y(vv)], color=INK, lw=0.6, alpha=0.12)
-        note(ax, x0 - 0.2, Y(vv) - 0.07, f"{vv:.1f} V", INK, 9, ha="right")
-    ax.fill_between(X, Y(v_load), Y(v), color=ROSE, alpha=0.55, lw=0)
-    ax.plot(X, Y(v), color=NAVY, lw=3.2)
-    ax.plot([x0, x1], [Y(2.0), Y(2.0)], color=ROSE, lw=1.4, ls=(0, (5, 4)))
-    note(ax, x1, Y(2.0) + 0.15, "CUTOFF", ROSE, 9, ha="right")
-    note(ax, x1, y0 - 0.85, "DAYS ON ONE COIN CELL", INK, 9, ha="right")
-    note(ax, x0, y1 + 0.35, "1 TASK / HOUR  ·  4 ELECTRODES / TASK  ·  ≈ 40 DAYS", INK, 10, weight="bold")
-    save(fig, "ubistat-battery")
-
-
-# 3. UbiStat — the six requirements as colored tiles
-def plate_ubistat_requirements():
-    fig, ax = canvas(INK)
-    reqs = [("AFFORDABLE", ROSE), ("SMALL", ORANGE), ("UNTETHERED", OLIVE), ("SEALED", TEAL), ("MULTI-SENSOR", PURPLE), ("REMOTE", NAVY)]
-    tw, th, gap = 4.9, 3.9, 0.25
-    for i, (lab, col) in enumerate(reqs):
-        r, c = divmod(i, 3)
-        x = 0.4 + c * (tw + gap); y = 9 - 0.4 - (r + 1) * th - r * gap
-        ax.add_patch(patches.Rectangle((x, y), tw, th, fc=col, zorder=2))
-        note(ax, x + 0.3, y + 0.35, lab, "#ffffff", 17, weight="bold", family=SANS)
-        gx, gy = x + tw - 1.0, y + th - 1.0  # a small glyph per requirement
-        if lab == "AFFORDABLE":
-            ax.add_patch(patches.Circle((gx, gy), 0.45, fill=False, ec="#ffffff", lw=3, zorder=3))
-        elif lab == "SMALL":
-            ax.add_patch(patches.Rectangle((gx - 0.2, gy - 0.2), 0.4, 0.4, fc="#ffffff", zorder=3))
-        elif lab == "UNTETHERED":
-            ax.plot([gx - 0.5, gx - 0.1], [gy, gy], color="#ffffff", lw=3); ax.plot([gx + 0.1, gx + 0.5], [gy, gy], color="#ffffff", lw=3)
-        elif lab == "SEALED":
-            ax.add_patch(patches.Rectangle((gx - 0.45, gy - 0.35), 0.9, 0.7, fill=False, ec="#ffffff", lw=3, zorder=3))
-        elif lab == "MULTI-SENSOR":
-            for k in range(4):
-                ax.add_patch(patches.Circle((gx - 0.45 + k * 0.3, gy), 0.11, fc="#ffffff", zorder=3))
-        else:
-            for k, rr in enumerate((0.15, 0.35, 0.55)):
-                ax.add_patch(patches.Arc((gx - 0.3, gy - 0.3), 2 * rr, 2 * rr, theta1=0, theta2=90, ec="#ffffff", lw=3, zorder=3))
-    save(fig, "ubistat-requirements")
-
-
-# 4. UbiStat — future direction: distributed water-quality sensing across terraced paddies
-def plate_ubistat_water():
-    fig, ax = canvas(LIGHT)
-    for i in range(9):
-        y = 0.6 + i * 0.95 + 0.25 * np.sin(np.linspace(0, 3 * np.pi, 200) + i)
-        xs = np.linspace(-0.2, 16.2, 200)
-        ax.fill_between(xs, y, y + 0.62, color=TEAL, alpha=0.25 + 0.06 * (i % 3), lw=0)
-        ax.plot(xs, y, color=GREEN, lw=1.4, alpha=0.8)
-    nodes = [(2.1, 1.4), (5.3, 2.5), (8.8, 1.6), (12.4, 2.8), (3.6, 4.3), (7.2, 5.1), (10.9, 4.6), (14.1, 5.6), (5.0, 7.0), (9.6, 7.4), (13.2, 7.9)]
-    for (x, y) in nodes:
-        for rr, a in ((0.55, 0.25), (0.35, 0.45)):
-            ax.add_patch(patches.Circle((x, y), rr, fill=False, ec=NAVY, lw=1.2, alpha=a, zorder=4))
-        ax.add_patch(patches.Circle((x, y), 0.14, fc=ORANGE, ec=NAVY, lw=1.2, zorder=5))
-    for a, b in ((0, 1), (1, 2), (2, 3), (1, 4), (4, 5), (5, 6), (6, 7), (5, 8), (8, 9), (9, 10), (6, 3)):
-        (x0, y0), (x1, y1) = nodes[a], nodes[b]
-        ax.plot([x0, x1], [y0, y1], color=NAVY, lw=1.0, ls=(0, (2, 3)), alpha=0.6, zorder=3)
-    note(ax, 0.4, 8.5, "NODE MAP  ·  ONE READING / HOUR / NODE", NAVY, 9)
-    save(fig, "ubistat-water")
-
-
-# 5. Phantom limb pain — five ERM motors on a strap around a transtibial residual limb
+# 1. Phantom limb pain — five ERM motors on a strap around a transtibial residual limb
 def plate_plp():
     fig, ax = canvas(DARK_PLUM)
     cx, cy = 7.2, 4.5
@@ -204,7 +88,7 @@ def plate_plp():
     save(fig, "plp-vibration")
 
 
-# 6. Frequency-encoded control — each module listens to its own band
+# 2. Frequency-encoded control — each module listens to its own band
 def plate_robots():
     fig, ax = canvas(DARK_NAVY)
     cols = [ROSE, ORANGE, OLIVE, TEAL, PURPLE]
@@ -231,7 +115,7 @@ def plate_robots():
     save(fig, "robots-frequency")
 
 
-# 7. Battery-free biohybrid actuation — light in, twitch out
+# 3. Battery-free biohybrid actuation — light in, twitch out
 def plate_biohybrid():
     fig, ax = canvas(PAPER)
     yy = np.linspace(0, 9, 900)
@@ -256,7 +140,7 @@ def plate_biohybrid():
     save(fig, "biohybrid")
 
 
-# 8. Care ecology — an abstract network (no claims about the framework)
+# 4. Care ecology — an abstract network (no claims about the framework)
 def plate_dice():
     fig, ax = canvas(PAPER)
     for r in (1.4, 2.6, 3.8):
@@ -282,6 +166,5 @@ def plate_dice():
 
 
 if __name__ == "__main__":
-    for fn in [plate_ubistat_cv, plate_ubistat_battery, plate_ubistat_requirements, plate_ubistat_water,
-               plate_plp, plate_robots, plate_biohybrid, plate_dice]:
+    for fn in [plate_plp, plate_robots, plate_biohybrid, plate_dice]:
         fn()

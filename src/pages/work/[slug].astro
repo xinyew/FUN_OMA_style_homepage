@@ -52,7 +52,7 @@ const gallery = d.gallery;
 ---
 <BaseLayout title={d.title} description={d.summary} current="work" ogImage={ogImage}>
   <main id="main">
-    <div class="site-hero" data-si-ground={cover.ground}>
+    <div class="site-hero" data-si-ground={d.coverGround ?? cover.ground}>
       <Media slug={project.id} file={d.cover} alt={d.coverAlt} illustration={d.coverIllustration} eager />
     </div>
 

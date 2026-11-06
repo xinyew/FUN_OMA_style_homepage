@@ -40,6 +40,7 @@ hardware: …                        # optional rows: partners (list), funding, 
 cover: cover.jpg                   # file in this folder
 coverAlt: What the image shows.
 coverIllustration: true            # prints an ILLUSTRATION tag on the image
+coverGround: light                 # optional: force the nav ink over the cover (measured otherwise)
 gallery:                           # optional; size: full (keeps its ratio), wide or third
   - { src: cv.jpg, alt: "…", size: full, illustration: true }
 timeline:                          # optional project history; news naming this project joins it
@@ -72,7 +73,7 @@ The theme follows the system's light or dark setting.
 
 ## Placeholder illustrations
 
-The UbiStat cover and the CPAP-PI images are real. The rest are drawn placeholders from `scripts/make-plates.py`, not data. Those images carry `illustration: true` and show an ILLUSTRATION tag. Replace them with real photos and figures, then remove the flag. Re-running the script rewrites the placeholders in place.
+The UbiStat, CPAP-PI and SafeWear images are real. The covers of the other four projects are drawn placeholders from `scripts/make-plates.py`, not data. Those images carry `illustration: true` and show an ILLUSTRATION tag. Replace them with real photos and figures, then remove the flag. Re-running the script rewrites the placeholders in place.
 
 ## Deploy
 

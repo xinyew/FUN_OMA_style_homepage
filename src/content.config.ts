@@ -33,6 +33,7 @@ const projects = defineCollection({
     cover: z.string(),                       // file name in the project folder
     coverAlt: z.string(),
     coverIllustration: z.boolean().default(false),
+    coverGround: z.enum(['light', 'dark']).optional(), // override the measured brightness for the nav ink
     gallery: z.array(z.object({
       src: z.string(),
       alt: z.string(),
