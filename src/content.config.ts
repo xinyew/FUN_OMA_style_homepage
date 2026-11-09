@@ -79,7 +79,8 @@ const papers = defineCollection({
     venue: z.string().optional(),            // only once accepted or published
     url: z.string().url().optional(),
     pdf: z.string().optional(),              // file in public/papers/
-    project: z.string().optional()
+    project: z.string().optional(),
+    draft: z.boolean().default(false)        // true hides the entry
   })
 });
 

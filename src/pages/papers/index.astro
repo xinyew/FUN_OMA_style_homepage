@@ -6,7 +6,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { projectUrl, slugify, url } from '../../lib/site.js';
 
-const papers = await getCollection('papers');
+const papers = await getCollection('papers', ({ data }) => !data.draft);
 const projects = new Set((await getCollection('projects', ({ data }) => !data.draft)).map((p) => p.id));
 const stages = ['Under review', 'In revision', 'In preparation'];
 const published = papers.filter((p) => p.data.status === 'Published');

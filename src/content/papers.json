@@ -31,7 +31,8 @@
     "authors": "[authors]",
     "year": 2026,
     "status": "In preparation",
-    "project": "biohybrid"
+    "project": "biohybrid",
+    "draft": true
   },
   {
     "id": "care-ecologies",
@@ -39,7 +40,8 @@
     "authors": "[authors]",
     "year": 2026,
     "status": "In revision",
-    "project": "care-ecologies"
+    "project": "care-ecologies",
+    "draft": true
   },
   {
     "id": "safewear",

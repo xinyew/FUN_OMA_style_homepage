@@ -49,14 +49,14 @@ order: 2                           # lowest first, on home and in the index
 featured: true                     # false keeps it off the home collage
 labelLeft: 10                      # optional: pin the home label (units = % of page width,
 labelTop: 20                       #   measured from the plate's top-left corner)
-draft: false
+draft: false                       # true hides the project everywhere until set back
 ```
 
 The body (Markdown) is the lead text on the project page.
 
 **News** items take `title`, `date`, `precision` (`day`, `month` or `year`), an optional `dateLabel` ("Summer 2026"), `source`, `url`, and `project`. A news item with a `project` hangs off that project's plate on the home page and joins its timeline; one without floats between plates.
 
-**Papers** take `title`, `authors`, `year`, `status` (`Published`, `Under review`, `In revision`, `In preparation`), and optionally `venue` (once accepted), `url`, `pdf` (a file in `public/papers/`) and `project`. Work in progress is grouped by stage, published work by year.
+**Papers** take `title`, `authors`, `year`, `status` (`Published`, `Under review`, `In revision`, `In preparation`), and optionally `venue` (once accepted), `url`, `pdf` (a file in `public/papers/`), `project` and `draft` (true hides the entry). Work in progress is grouped by stage, published work by year.
 
 ## What the template does
 

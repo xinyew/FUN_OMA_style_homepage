@@ -22,7 +22,7 @@ const { Content } = await render(project);
 
 const all = (await getCollection('projects', ({ data }) => !data.draft)).sort(byOrder);
 const news = await getCollection('news', ({ data }) => !data.draft && data.project === project.id);
-const papers = await getCollection('papers', ({ data }) => data.project === project.id);
+const papers = await getCollection('papers', ({ data }) => !data.draft && data.project === project.id);
 
 const entries = [
   ...d.timeline.map((t) => ({ date: t.date, precision: t.precision, dateLabel: t.dateLabel, text: t.text, href: undefined as string | undefined })),

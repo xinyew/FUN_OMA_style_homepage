@@ -9,6 +9,7 @@ paper: In revision
 cover: cover.jpg
 coverAlt: "Illustration: an abstract network of actors and ties around one person."
 coverIllustration: true
+draft: true   # hidden for now; set to false to bring the page back
 order: 6
 ---
 This study looks at how people with diabetes and diabetic foot ulcers establish and maintain their care ecology, and proposes the DICE framework (Developmental Informatics in Care Ecologies).
